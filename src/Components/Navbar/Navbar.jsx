@@ -8,7 +8,7 @@ import { WishListContext } from "../../Context/WishListContext";
 export default function Navbar() {
   const [closeList, setCloseList] = useState(true);
   let { userToken, setUserToken } = useContext(UserContext);
-  let { cart, getAllProductsFromCart } = useContext(CartContext);
+  let { cart } = useContext(CartContext);
   let { count } = useContext(WishListContext);
   let navigte = useNavigate();
 

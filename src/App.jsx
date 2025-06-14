@@ -198,16 +198,16 @@ export default function App() {
     <>
       <Provider store={store}>
         <QueryClientProvider client={query}>
-          <WishListContextProvider>
-            <CartContextProvider>
-              <UserContextProvider>
+          <UserContextProvider>
+            <WishListContextProvider>
+              <CartContextProvider>
                 <RouterProvider router={router}></RouterProvider>
                 {/* <ReactQueryDevtools /> */}
                 <ArrowToTop />
                 <Toaster />
-              </UserContextProvider>
-            </CartContextProvider>
-          </WishListContextProvider>
+              </CartContextProvider>
+            </WishListContextProvider>
+          </UserContextProvider>
         </QueryClientProvider>
       </Provider>
     </>

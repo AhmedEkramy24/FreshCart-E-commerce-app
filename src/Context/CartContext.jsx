@@ -1,13 +1,12 @@
 import axios from "axios";
-import { createContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 import toast from "react-hot-toast";
+import { UserContext } from "./UserContext";
 
 export let CartContext = createContext();
 
 export default function CartContextProvider({ children }) {
-  const headers = {
-    token: localStorage.getItem("user-token"),
-  };
+  let { userToken } = useContext(UserContext);
   const [cart, setCart] = useState(null);
   async function addToCart(id) {
     try {
@@ -15,11 +14,12 @@ export default function CartContextProvider({ children }) {
         "https://ecommerce.routemisr.com/api/v1/cart",
         { productId: id },
         {
-          headers,
+          headers: {
+            token: userToken,
+          },
         }
       );
       getAllProductsFromCart();
-      
       toast.success(data.message);
     } catch (error) {
       console.log(error);
@@ -30,7 +30,9 @@ export default function CartContextProvider({ children }) {
       let { data } = await axios.get(
         "https://ecommerce.routemisr.com/api/v1/cart",
         {
-          headers,
+          headers: {
+            token: userToken,
+          },
         }
       );
       setCart(data);
@@ -39,14 +41,9 @@ export default function CartContextProvider({ children }) {
     }
   }
 
-  useEffect(() => {
-    getAllProductsFromCart();
-  }, []);
   return (
     <>
-      <CartContext.Provider
-        value={{ cart, addToCart, getAllProductsFromCart, headers }}
-      >
+      <CartContext.Provider value={{ cart, addToCart, getAllProductsFromCart }}>
         {children}
       </CartContext.Provider>
     </>

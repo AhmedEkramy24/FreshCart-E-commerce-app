@@ -3,19 +3,25 @@ import { CartContext } from "../../Context/CartContext";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import { Helmet } from "react-helmet";
+import { UserContext } from "./../../Context/UserContext";
 
 export default function Cart() {
-  let { cart, getAllProductsFromCart, headers } = useContext(CartContext);
+  let { cart, getAllProductsFromCart } = useContext(CartContext);
+  let { userToken } = useContext(UserContext);
   useEffect(() => {
-    getAllProductsFromCart();
-  }, []);
-  const [isLoading, setIsLoading] = useState(false);
-
+    if (userToken) {
+      getAllProductsFromCart();
+    }
+  }, [userToken]);
   async function addCountToProduct(count, id) {
     let { data } = await axios.put(
       `https://ecommerce.routemisr.com/api/v1/cart/${id}`,
       { count: ++count },
-      { headers }
+      {
+        headers: {
+          token: userToken,
+        },
+      }
     );
     getAllProductsFromCart();
   }
@@ -24,7 +30,11 @@ export default function Cart() {
     let { data } = await axios.put(
       `https://ecommerce.routemisr.com/api/v1/cart/${id}`,
       { count: --count },
-      { headers }
+      {
+        headers: {
+          token: userToken,
+        },
+      }
     );
     getAllProductsFromCart();
   }
@@ -32,7 +42,11 @@ export default function Cart() {
     setIsLoading(true);
     let { data } = await axios.delete(
       `https://ecommerce.routemisr.com/api/v1/cart/${id}`,
-      { headers }
+      {
+        headers: {
+          token: userToken,
+        },
+      }
     );
     getAllProductsFromCart();
     setIsLoading(false);
